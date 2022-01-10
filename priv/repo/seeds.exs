@@ -1,11 +1,12 @@
 # Script for populating the database. You can run it as:
 #
 #     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     GraphqlPractice.Repo.insert!(%GraphqlPractice.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+alias GraphqlPractice.{Content, Accounts, Repo}
+
+Accounts.create_user(%{name: "Ursula", email: "ursuala@example.com"})
+Accounts.create_user(%{name: "Birgitta", email: "birgitta@example.com"})
+
+Content.create_upload(%{title: "a picture", description: "a picture showing stuff", user_id: 1})
+Content.create_upload(%{title: "another picture", description: "a picture showing more stuff", user_id: 1})
+Content.create_upload(%{title: "Abendhimmel", description: "a picture showing the sunset", user_id: 2})
+Content.create_upload(%{title: "Morgenhimmel", description: "a picture showing the sunrise", user_id: 2})
