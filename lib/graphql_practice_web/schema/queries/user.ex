@@ -1,22 +1,17 @@
 defmodule GraphqlPracticeWeb.Schema.Queries.User do
   use Absinthe.Schema.Notation
-  alias GraphqlPractice.Accounts
+  alias GraphqlPracticeWeb.Resolvers
 
   object :user_queries do
     @desc "Provides a list of all users"
     field :users, list_of(:user) do
-      resolve fn _, _, _ ->
-        {:ok, Accounts.list_users()}
-      end
+      resolve &Resolvers.User.users/3
     end
 
     @desc "Gets a user by id"
     field :user, :user do
       arg(:id, non_null(:id))
-
-      resolve fn _, %{id: id}, _ ->
-        {:ok, Accounts.get_user!(id)}
-      end
+      resolve &Resolvers.User.get_user/3
     end
   end
 end
