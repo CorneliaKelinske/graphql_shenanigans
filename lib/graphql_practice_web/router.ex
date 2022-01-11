@@ -22,8 +22,8 @@ defmodule GraphqlPracticeWeb.Router do
 
   scope "/graphiql" do
     forward "/", Absinthe.Plug.GraphiQL,
-    schema: GraphqlPracticeWeb.Schema,
-    interface: :playground
+      schema: GraphqlPracticeWeb.Schema,
+      interface: :playground
   end
 
   # Other scopes may use custom stacks.

@@ -11,6 +11,5 @@ defmodule GraphqlPractice.Repo.Migrations.CreateUploads do
     end
 
     create index(:uploads, [:user_id])
-
   end
 end

@@ -14,10 +14,9 @@ defmodule GraphqlPractice.Accounts do
   end
 
   def get_user!(id) do
-   Repo.get!(User, id)
-   |> Repo.preload(:uploads)
+    Repo.get!(User, id)
+    |> Repo.preload(:uploads)
   end
-
 
   def create_user(attrs \\ %{}) do
     %User{}
@@ -30,7 +29,6 @@ defmodule GraphqlPractice.Accounts do
     |> User.changeset(attrs)
     |> Repo.update()
   end
-
 
   def delete_user(%User{} = user) do
     Repo.delete(user)

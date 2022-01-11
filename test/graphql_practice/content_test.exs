@@ -35,7 +35,12 @@ defmodule GraphqlPractice.ContentTest do
 
     test "update_uplod/2 with valid data updates the uplod" do
       uplod = uplod_fixture()
-      update_attrs = %{description: "some updated description", text: "some updated text", title: "some updated title"}
+
+      update_attrs = %{
+        description: "some updated description",
+        text: "some updated text",
+        title: "some updated title"
+      }
 
       assert {:ok, %Uplod{} = uplod} = Content.update_uplod(uplod, update_attrs)
       assert uplod.description == "some updated description"
