@@ -5,18 +5,30 @@ defmodule GraphqlPractice.ContentFixtures do
   """
 
   @doc """
-  Generate a uplod.
+  Generate a upload.
   """
-  def uplod_fixture(attrs \\ %{}) do
+  def upload_fixture(attrs \\ %{}) do
     {:ok, upload} =
       attrs
       |> Enum.into(%{
         description: "some description",
-        text: "some text",
-        title: "some title"
+        title: "some title",
+        user_id: 1
       })
       |> GraphqlPractice.Content.create_upload()
 
     upload
+  end
+
+  def upload(%{user: user}) do
+    {:ok, upload} =
+      %{
+        description: "some description",
+        title: "some title",
+        user_id: user.id
+      }
+      |> GraphqlPractice.Content.create_upload()
+
+    %{upload: upload}
   end
 end

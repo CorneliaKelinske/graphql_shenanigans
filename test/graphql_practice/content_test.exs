@@ -1,68 +1,81 @@
 defmodule GraphqlPractice.ContentTest do
   use GraphqlPractice.DataCase
-
+  import GraphqlPractice.ContentFixtures
+  import GraphqlPractice.AccountsFixtures
   alias GraphqlPractice.Content
+  alias GraphqlPractice.Content.Upload
 
-  describe "uploads" do
-    alias GraphqlPractice.Content.Uplod
+  @invalid_attrs %{description: nil, title: nil}
 
-    import GraphqlPractice.ContentFixtures
+  describe "list_uploads/0" do
+    setup [:user, :upload]
 
-    @invalid_attrs %{description: nil, text: nil, title: nil}
+    test "returns all uploads", %{upload: upload} do
+      assert Content.list_uploads() |> set_nil_user() == [upload] |> set_nil_user()
+    end
+  end
 
-    test "list_uploads/0 returns all uploads" do
-      uplod = uplod_fixture()
-      assert Content.list_uploads() == [uplod]
+  describe "get_upload!/1" do
+    setup [:user, :upload]
+
+    test "get_upload!/1 returns the upload with given id", %{upload: upload} do
+      assert Content.get_upload!(upload.id) |> set_nil_user() == upload |> set_nil_user()
+    end
+  end
+
+  describe "create_upload/1" do
+    setup [:user]
+
+    test "creates upload when valid data is provided", %{user: user} do
+      valid_attrs = %{description: "some description", title: "some title", user_id: user.id}
+
+      assert {:ok, %Upload{} = upload} = Content.create_upload(valid_attrs)
+      assert upload.description == "some description"
+      assert upload.title == "some title"
     end
 
-    test "get_uplod!/1 returns the uplod with given id" do
-      uplod = uplod_fixture()
-      assert Content.get_uplod!(uplod.id) == uplod
+    test "returns error changeset when invalid data is provided", %{user: user} do
+      invalid_attrs = Map.put(@invalid_attrs, :user_id, user.id)
+      assert {:error, %Ecto.Changeset{}} = Content.create_upload(invalid_attrs)
     end
+  end
 
-    test "create_uplod/1 with valid data creates a uplod" do
-      valid_attrs = %{description: "some description", text: "some text", title: "some title"}
+  describe "update_upload/2" do
+    setup [:user, :upload]
 
-      assert {:ok, %Uplod{} = uplod} = Content.create_uplod(valid_attrs)
-      assert uplod.description == "some description"
-      assert uplod.text == "some text"
-      assert uplod.title == "some title"
-    end
-
-    test "create_uplod/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Content.create_uplod(@invalid_attrs)
-    end
-
-    test "update_uplod/2 with valid data updates the uplod" do
-      uplod = uplod_fixture()
-
+    test "updates the upload when valid data is provided", %{upload: upload} do
       update_attrs = %{
         description: "some updated description",
-        text: "some updated text",
         title: "some updated title"
       }
 
-      assert {:ok, %Uplod{} = uplod} = Content.update_uplod(uplod, update_attrs)
-      assert uplod.description == "some updated description"
-      assert uplod.text == "some updated text"
-      assert uplod.title == "some updated title"
+      assert {:ok, %Upload{} = upload} = Content.update_upload(upload, update_attrs)
+      assert upload.description == "some updated description"
+      assert upload.title == "some updated title"
     end
 
-    test "update_uplod/2 with invalid data returns error changeset" do
-      uplod = uplod_fixture()
-      assert {:error, %Ecto.Changeset{}} = Content.update_uplod(uplod, @invalid_attrs)
-      assert uplod == Content.get_uplod!(uplod.id)
+    test "returns error changeset when invalid data is provided", %{upload: upload} do
+      assert {:error, %Ecto.Changeset{}} = Content.update_upload(upload, @invalid_attrs)
+      assert upload == Content.get_upload!(upload.id)
     end
 
-    test "delete_uplod/1 deletes the uplod" do
-      uplod = uplod_fixture()
-      assert {:ok, %Uplod{}} = Content.delete_uplod(uplod)
-      assert_raise Ecto.NoResultsError, fn -> Content.get_uplod!(uplod.id) end
+    test "delete_upload/1 deletes the upload" do
+      upload = upload_fixture()
+      assert {:ok, %Upload{}} = Content.delete_upload(upload)
+      assert_raise Ecto.NoResultsError, fn -> Content.get_upload!(upload.id) end
     end
+  end
 
-    test "change_uplod/1 returns a uplod changeset" do
-      uplod = uplod_fixture()
-      assert %Ecto.Changeset{} = Content.change_uplod(uplod)
-    end
+  test "change_upload/1 returns a uplod changeset" do
+    upload = upload_fixture()
+    assert %Ecto.Changeset{} = Content.change_upload(upload)
+  end
+
+  defp set_nil_user(list) when is_list(list) do
+    Enum.map(list, &set_nil_user/1)
+  end
+
+  defp set_nil_user(map) when is_map(map) do
+    Map.put(map, :user, nil)
   end
 end

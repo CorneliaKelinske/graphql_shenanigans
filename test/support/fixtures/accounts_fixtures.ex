@@ -10,12 +10,17 @@ defmodule GraphqlPractice.AccountsFixtures do
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs
-      |> Enum.into(%{
-        email: "some email",
-        name: "some name"
-      })
+      |> Enum.into(%{email: "some email", name: "some name"})
       |> GraphqlPractice.Accounts.create_user()
 
-    user
+    Map.put(user, :uploads, [])
+  end
+
+  def user(_) do
+    {:ok, user} =
+      %{email: "some email", name: "some name"}
+      |> GraphqlPractice.Accounts.create_user()
+
+    %{user: Map.put(user, :uploads, [])}
   end
 end
