@@ -75,12 +75,9 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UploadTest do
 
       assert {:ok, %{data: data}} = Absinthe.run(@uploads_doc, Schema)
 
-
       assert %{"uploads" => uploads} = data
 
       assert List.last(uploads)["id"] === to_string(upload3.id)
-
     end
   end
-
 end
