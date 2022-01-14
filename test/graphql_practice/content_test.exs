@@ -7,25 +7,25 @@ defmodule GraphqlPractice.ContentTest do
 
   @invalid_attrs %{description: nil, title: nil}
 
-  describe "list_uploads/0" do
-    setup [:user, :upload]
+  setup [:user, :upload]
 
+  describe "list_uploads/0" do
     test "returns all uploads", %{upload: upload} do
-      assert Content.list_uploads() |> set_nil_user() == [upload] |> set_nil_user()
+      expected_upload_list = set_nil_user([upload])
+      retrieved_upload_list = Content.list_uploads() |> set_nil_user()
+      assert retrieved_upload_list === expected_upload_list
     end
   end
 
   describe "get_upload!/1" do
-    setup [:user, :upload]
-
     test "get_upload!/1 returns the upload with given id", %{upload: upload} do
-      assert Content.get_upload!(upload.id) |> set_nil_user() == upload |> set_nil_user()
+      expected_upload = set_nil_user(upload)
+      retrieved_upload = upload.id |> Content.get_upload!() |> set_nil_user()
+      assert retrieved_upload === expected_upload
     end
   end
 
   describe "create_upload/1" do
-    setup [:user]
-
     test "creates upload when valid data is provided", %{user: user} do
       valid_attrs = %{description: "some description", title: "some title", user_id: user.id}
 
@@ -41,8 +41,6 @@ defmodule GraphqlPractice.ContentTest do
   end
 
   describe "update_upload/2" do
-    setup [:user, :upload]
-
     test "updates the upload when valid data is provided", %{upload: upload} do
       update_attrs = %{
         description: "some updated description",
@@ -56,19 +54,23 @@ defmodule GraphqlPractice.ContentTest do
 
     test "returns error changeset when invalid data is provided", %{upload: upload} do
       assert {:error, %Ecto.Changeset{}} = Content.update_upload(upload, @invalid_attrs)
-      assert upload == Content.get_upload!(upload.id)
+      expected_upload = set_nil_user(upload)
+      retrieved_upload = upload.id |> Content.get_upload!() |> set_nil_user()
+      assert retrieved_upload === expected_upload
     end
+  end
 
-    test "delete_upload/1 deletes the upload" do
-      upload = upload_fixture()
+  describe "delete_upload/1" do
+    test "deletes the upload", %{upload: upload} do
       assert {:ok, %Upload{}} = Content.delete_upload(upload)
       assert_raise Ecto.NoResultsError, fn -> Content.get_upload!(upload.id) end
     end
   end
 
-  test "change_upload/1 returns a uplod changeset" do
-    upload = upload_fixture()
-    assert %Ecto.Changeset{} = Content.change_upload(upload)
+  describe "change_upload/1" do
+    test "returns a uplod changeset", %{upload: upload} do
+      assert %Ecto.Changeset{} = Content.change_upload(upload)
+    end
   end
 
   defp set_nil_user(list) when is_list(list) do
