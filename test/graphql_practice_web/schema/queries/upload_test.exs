@@ -19,11 +19,19 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UploadTest do
     user_id: 2
   }
 
+  @all_upload_params [@upload1_params, @upload2_params, @upload3_params]
+
   @upload_doc """
     query getUpload($id: ID){
       upload(id: $id){
         title,
-        description
+        description,
+        id,
+        user{
+          name,
+          email,
+          id
+        }
       }
     }
   """
@@ -56,6 +64,7 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UploadTest do
         user {
           name
           email
+          id
         }
       }
     }
@@ -65,19 +74,40 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UploadTest do
     setup [:user]
 
     test "Returns a list of all uploads", %{user: user} do
-      upload1_params = Map.put(@upload1_params, :user_id, user.id)
-      upload2_params = Map.put(@upload2_params, :user_id, user.id)
-      upload3_params = Map.put(@upload3_params, :user_id, user.id)
-
-      assert {:ok, upload1} = Content.create_upload(upload1_params)
-      assert {:ok, upload2} = Content.create_upload(upload2_params)
-      assert {:ok, upload3} = Content.create_upload(upload3_params)
+      [%{id: upload1_id}, %{id: upload2_id}, %{id: upload3_id}] =
+        for params <- @all_upload_params do
+          assert {:ok, upload} = params |> Map.put(:user_id, user.id) |> Content.create_upload()
+          upload
+        end
 
       assert {:ok, %{data: data}} = Absinthe.run(@uploads_doc, Schema)
 
       assert %{"uploads" => uploads} = data
 
-      assert List.last(uploads)["id"] === to_string(upload3.id)
+      upload1_id = to_string(upload1_id)
+      upload2_id = to_string(upload2_id)
+      upload3_id = to_string(upload3_id)
+
+      assert [
+               %{
+                 "description" => "a picture showing more stuff",
+                 "id" => ^upload1_id,
+                 "title" => "another picture",
+                 "user" => %{"email" => "some email", "name" => "some name"}
+               },
+               %{
+                 "description" => "a picture showing the sunset",
+                 "id" => ^upload2_id,
+                 "title" => "Abendhimmel",
+                 "user" => %{"email" => "some email", "name" => "some name"}
+               },
+               %{
+                 "description" => "a picture showing the sunrise",
+                 "id" => ^upload3_id,
+                 "title" => "Morgenhimmel",
+                 "user" => %{"email" => "some email", "name" => "some name"}
+               }
+             ] = Enum.sort_by(uploads, & &1["id"])
     end
   end
 end

@@ -11,13 +11,17 @@ defmodule GraphqlPractice.ContentTest do
 
   describe "list_uploads/0" do
     test "returns all uploads", %{upload: upload} do
-      assert Content.list_uploads() |> set_nil_user() == [upload] |> set_nil_user()
+      expected_upload_list = set_nil_user([upload])
+      retrieved_upload_list = Content.list_uploads() |> set_nil_user()
+      assert retrieved_upload_list === expected_upload_list
     end
   end
 
   describe "get_upload!/1" do
     test "get_upload!/1 returns the upload with given id", %{upload: upload} do
-      assert Content.get_upload!(upload.id) |> set_nil_user() == upload |> set_nil_user()
+      expected_upload = set_nil_user(upload)
+      retrieved_upload = upload.id |> Content.get_upload!() |> set_nil_user()
+      assert retrieved_upload === expected_upload
     end
   end
 
@@ -37,8 +41,6 @@ defmodule GraphqlPractice.ContentTest do
   end
 
   describe "update_upload/2" do
-    # setup [:
-
     test "updates the upload when valid data is provided", %{upload: upload} do
       update_attrs = %{
         description: "some updated description",
@@ -52,7 +54,9 @@ defmodule GraphqlPractice.ContentTest do
 
     test "returns error changeset when invalid data is provided", %{upload: upload} do
       assert {:error, %Ecto.Changeset{}} = Content.update_upload(upload, @invalid_attrs)
-      assert upload |> set_nil_user() == Content.get_upload!(upload.id) |> set_nil_user()
+      expected_upload = set_nil_user(upload)
+      retrieved_upload = upload.id |> Content.get_upload!() |> set_nil_user()
+      assert retrieved_upload === expected_upload
     end
   end
 

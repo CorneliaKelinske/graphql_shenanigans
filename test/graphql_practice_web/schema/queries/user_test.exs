@@ -7,6 +7,8 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
   @user2_params %{name: "Birgitta", email: "birgitta@example.com"}
   @user3_params %{name: "Harry", email: "harry@example.com"}
 
+  @all_user_params [@user1_params, @user2_params, @user3_params]
+
   @user_doc """
     query getUser($id: ID){
       user(id: $id){
@@ -15,6 +17,8 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
         email,
         uploads {
           title
+          description
+          id
         }
       }
     }
@@ -40,6 +44,7 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
      uploads {
        title
        description
+       id
      }
    }
   }
@@ -47,15 +52,40 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
 
   describe "@users" do
     test "Returns a list of all users" do
-      assert {:ok, user1} = Accounts.create_user(@user1_params)
-      assert {:ok, user2} = Accounts.create_user(@user2_params)
-      assert {:ok, user3} = Accounts.create_user(@user3_params)
+      [%{id: user1_id}, %{id: user2_id}, %{id: user3_id}] =
+        for params <- @all_user_params do
+          assert {:ok, user} = Accounts.create_user(params)
+          user
+        end
 
       assert {:ok, %{data: data}} = Absinthe.run(@users_doc, Schema)
 
       assert %{"users" => users} = data
 
-      assert List.last(users)["id"] === to_string(user3.id)
+      user1_id = to_string(user1_id)
+      user2_id = to_string(user2_id)
+      user3_id = to_string(user3_id)
+
+      assert [
+               %{
+                 "email" => "ursuala@example.com",
+                 "id" => ^user1_id,
+                 "name" => "Ursula",
+                 "uploads" => []
+               },
+               %{
+                 "email" => "birgitta@example.com",
+                 "id" => ^user2_id,
+                 "name" => "Birgitta",
+                 "uploads" => []
+               },
+               %{
+                 "email" => "harry@example.com",
+                 "id" => ^user3_id,
+                 "name" => "Harry",
+                 "uploads" => []
+               }
+             ] = Enum.sort_by(users, & &1["id"])
     end
   end
 end
