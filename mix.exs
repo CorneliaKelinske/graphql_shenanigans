@@ -51,7 +51,8 @@ defmodule GraphqlPractice.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:absinthe, "~> 1.6"},
       {:absinthe_plug, "~> 1.5"},
-      {:absinthe_phoenix, "~> 2.0.0"}
+      {:absinthe_phoenix, "~> 2.0.0"},
+      {:dataloader, "~> 1.0.0"}
     ]
   end
 

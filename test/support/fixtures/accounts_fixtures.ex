@@ -12,8 +12,8 @@ defmodule GraphqlPractice.AccountsFixtures do
       attrs
       |> Enum.into(%{email: "some email", name: "some name"})
       |> GraphqlPractice.Accounts.create_user()
+      user
 
-    Map.put(user, :uploads, [])
   end
 
   def user(_) do
