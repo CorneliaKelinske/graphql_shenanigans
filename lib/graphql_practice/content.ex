@@ -10,12 +10,12 @@ defmodule GraphqlPractice.Content do
 
   def list_uploads do
     Repo.all(Upload)
-    #|> Repo.preload(:user)
+    # |> Repo.preload(:user)
   end
 
   def get_upload!(id) do
     Repo.get!(Upload, id)
-    #|> Repo.preload(:user)
+    # |> Repo.preload(:user)
   end
 
   def create_upload(attrs \\ %{}) do
