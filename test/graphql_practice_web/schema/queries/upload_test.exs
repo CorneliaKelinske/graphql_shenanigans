@@ -55,6 +55,43 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UploadTest do
     end
   end
 
+  @upload_by_title_doc """
+    query getUploadbyTitle($title: String){
+      uploadByTitle(title: $title){
+        description,
+        id,
+        user{
+          name,
+          email,
+          id
+        }
+      }
+    }
+  """
+
+  describe "@upload_by_title" do
+    setup [:user]
+
+    test "Can get the upload by its title", %{user: user} do
+      upload1_params = Map.put(@upload1_params, :user_id, user.id)
+      assert {:ok, upload1} = Content.create_upload(upload1_params)
+
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@upload_by_title_doc, Schema, variables: %{"title" => upload1.title})
+
+      id = to_string(upload1.id)
+      user_id = to_string(user.id)
+
+      assert %{
+               "uploadByTitle" => %{
+                 "description" => "a picture showing more stuff",
+                 "id" => ^id,
+                 "user" => %{"email" => "some email", "id" => ^user_id, "name" => "some name"}
+               }
+             } = data
+    end
+  end
+
   @uploads_doc """
     query getUploads{
       uploads {

@@ -35,6 +35,34 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
     end
   end
 
+  @user_by_name_doc """
+    query getUserByName($name: String){
+      userByName(name: $name){
+        email,
+        id,
+        uploads{
+          title,
+          description,
+          id
+        }
+      }
+    }
+  """
+
+  describe "@user_by_name" do
+    test "Can get user by their name" do
+      assert {:ok, user1} = Accounts.create_user(@user1_params)
+
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@user_by_name_doc, Schema, variables: %{"name" => user1.name})
+
+      id = to_string(user1.id)
+
+      assert %{"userByName" => %{"email" => "ursuala@example.com", "id" => ^id, "uploads" => []}} =
+               data
+    end
+  end
+
   @users_doc """
   query getUsers{
    users{

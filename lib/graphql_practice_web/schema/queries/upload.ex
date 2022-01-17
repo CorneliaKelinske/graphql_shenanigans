@@ -19,6 +19,5 @@ defmodule GraphqlPracticeWeb.Schema.Queries.Upload do
       arg(:title, non_null(:string))
       resolve &Resolvers.Upload.get_upload_by_title/3
     end
-
   end
 end
