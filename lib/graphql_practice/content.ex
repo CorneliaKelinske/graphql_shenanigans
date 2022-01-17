@@ -10,14 +10,18 @@ defmodule GraphqlPractice.Content do
 
   def list_uploads do
     Repo.all(Upload)
-    # |> Repo.preload(:user)
   end
 
   def get_upload!(id) do
     Repo.get!(Upload, id)
-    # |> Repo.preload(:user)
   end
 
+  def get_upload_by_title(title) do
+    Repo.get_by(Upload, title: title)
+  end
+
+  @spec create_upload(:invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}) ::
+          any
   def create_upload(attrs \\ %{}) do
     %Upload{}
     |> Upload.changeset(attrs)

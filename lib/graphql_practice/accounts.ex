@@ -10,12 +10,14 @@ defmodule GraphqlPractice.Accounts do
 
   def list_users do
     Repo.all(User)
-    # |> Repo.preload(:uploads)
   end
 
   def get_user!(id) do
     Repo.get!(User, id)
-    # |> Repo.preload(:uploads)
+  end
+
+  def get_user_by_name(name) do
+    Repo.get_by(User, name: name)
   end
 
   def create_user(attrs \\ %{}) do

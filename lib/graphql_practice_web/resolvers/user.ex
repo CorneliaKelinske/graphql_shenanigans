@@ -8,4 +8,8 @@ defmodule GraphqlPracticeWeb.Resolvers.User do
   def get_user(_, %{id: id}, _) do
     {:ok, Accounts.get_user!(id)}
   end
+
+  def get_user_by_name(_, %{name: name}, _) do
+    {:ok, Accounts.get_user_by_name(name)}
+  end
 end

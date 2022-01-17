@@ -13,5 +13,12 @@ defmodule GraphqlPracticeWeb.Schema.Queries.Upload do
       arg(:id, non_null(:id))
       resolve &Resolvers.Upload.get_upload/3
     end
+
+    @desc "Gets an upload by its title"
+    field :upload_by_title, :upload do
+      arg(:title, non_null(:string))
+      resolve &Resolvers.Upload.get_upload_by_title/3
+    end
+
   end
 end
