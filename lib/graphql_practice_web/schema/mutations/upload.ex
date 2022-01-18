@@ -7,8 +7,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.Upload do
     field :create_upload, :upload_result do
       arg :input, non_null(:upload_input)
       resolve(&Resolvers.Upload.create_upload/3)
-
     end
-
   end
 end

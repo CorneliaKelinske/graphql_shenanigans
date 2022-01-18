@@ -6,14 +6,14 @@ defmodule GraphqlPracticeWeb.Resolvers.User do
   end
 
   def get_user(_, %{id: id}, _) do
-    {:ok, Accounts.get_user!(id)} |> IO.inspect(label: "9", limit: :infinity, charlists: false)
+    {:ok, Accounts.get_user!(id)}
   end
 
   def get_user_by_name(_, %{name: name}, _) do
     {:ok, Accounts.get_user_by_name(name)}
   end
 
-  def create_user(_, %{input: params}, _) do
+  def create_user(_, params, _) do
     case Accounts.create_user(params) do
       {:error, changeset} ->
         {:error,
@@ -21,7 +21,7 @@ defmodule GraphqlPracticeWeb.Resolvers.User do
          details: Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)}
 
       {:ok, user} ->
-        {:ok, %{user: user}}|> IO.inspect(label: "24", limit: :infinity, charlists: false)
+        {:ok, %{user: user}}
     end
   end
 end
