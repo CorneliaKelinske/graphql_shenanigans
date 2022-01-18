@@ -22,10 +22,10 @@ defmodule GraphqlPracticeWeb.Types.User do
     field :errors, list_of(:input_error)
   end
 
-  @desc "Ecto changeset errors from an input"
-  object :input_error do
-    field :key, :string
-    field :message, :string
-    field :details, :string
-  end
+  # @desc "Ecto changeset errors from an input"
+  # object :input_error do
+  #   field :key, :string
+  #   field :message, :string
+  #   field :details, :string
+  # end
 end
