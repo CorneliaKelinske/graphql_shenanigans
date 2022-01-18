@@ -4,10 +4,15 @@ defmodule GraphqlPracticeWeb.Schema do
   import_types(GraphqlPracticeWeb.Types.Upload)
   import_types(GraphqlPracticeWeb.Schema.Queries.Upload)
   import_types(GraphqlPracticeWeb.Schema.Queries.User)
+  import_types(GraphqlPracticeWeb.Schema.Mutations.User)
 
   query do
     import_fields(:upload_queries)
     import_fields(:user_queries)
+  end
+
+  mutation do
+    import_fields(:user_mutations)
   end
 
   def context(ctx) do
