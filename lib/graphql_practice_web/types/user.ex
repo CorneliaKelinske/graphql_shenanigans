@@ -10,4 +10,9 @@ defmodule GraphqlPracticeWeb.Types.User do
 
     field :uploads, list_of(:upload), resolve: dataloader(GraphqlPractice.Content, :uploads)
   end
+
+  object :user_result do
+    field :user, :user
+    field :errors, list_of(:input_error)
+  end
 end
