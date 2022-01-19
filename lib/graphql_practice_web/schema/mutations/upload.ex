@@ -9,7 +9,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.Upload do
       arg :description, non_null(:string)
       arg :user_id, non_null(:id)
 
-      resolve(&Resolvers.Upload.create_upload/3)
+      resolve &Resolvers.Upload.create_upload/3
     end
   end
 end

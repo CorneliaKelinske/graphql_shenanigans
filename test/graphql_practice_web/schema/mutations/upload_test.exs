@@ -45,10 +45,13 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                )
 
       assert %{"createUpload" => %{"errors" => nil, "upload" => upload}} = data
+      string_user_id = to_string(user_id)
 
-      assert Map.get(upload, "title") === create_title
-      assert Map.get(upload, "description") === create_description
-      assert get_in(upload, ["user", "id"]) === to_string(user_id)
+      assert %{
+               "title" => ^create_title,
+               "description" => ^create_description,
+               "user" => %{"id" => ^string_user_id}
+             } = upload
 
       string_id = Map.get(upload, "id")
       id = String.to_integer(string_id)
@@ -71,7 +74,14 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                  }
                )
 
-      assert [%{details: _details, message: _message, path: _path}] = errors
+      assert [
+               %{
+                 details: %{description: ["can't be blank"], title: ["can't be blank"]},
+                 locations: _,
+                 message: "Could not create upload!",
+                 path: ["createUpload"]
+               }
+             ] = errors
     end
   end
 end

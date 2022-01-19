@@ -36,8 +36,11 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
                )
 
       assert %{"createUser" => %{"errors" => nil, "user" => user}} = data
-      assert Map.get(user, "name") === create_name
-      assert Map.get(user, "email") === create_email
+
+      assert %{
+               "name" => ^create_name,
+               "email" => ^create_email
+             } = user
 
       string_id = Map.get(user, "id")
       id = String.to_integer(string_id)
@@ -54,7 +57,14 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
                  variables: %{"name" => create_name, "email" => create_email}
                )
 
-      assert [%{details: _details, message: _message, path: _path}] = errors
+      assert [
+               %{
+                 details: %{name: ["can't be blank"], email: ["can't be blank"]},
+                 locations: _,
+                 message: "Could not create user!",
+                 path: ["createUser"]
+               }
+             ] = errors
     end
   end
 end
