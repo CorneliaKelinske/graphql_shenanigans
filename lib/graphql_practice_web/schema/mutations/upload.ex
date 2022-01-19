@@ -5,7 +5,10 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.Upload do
   object :upload_mutations do
     @desc "Creates an upload"
     field :create_upload, :upload_result do
-      arg :input, non_null(:upload_input)
+      arg :title, non_null(:string)
+      arg :description, non_null(:string)
+      arg :user_id, non_null(:id)
+
       resolve(&Resolvers.Upload.create_upload/3)
     end
   end

@@ -10,11 +10,10 @@ defmodule GraphqlPracticeWeb.Resolvers.Upload do
   end
 
   def get_upload_by_title(_, %{title: title}, _) do
-    IO.puts("HIT")
     {:ok, Content.get_upload_by_title(title)}
   end
 
-  def create_upload(_, %{input: params}, _) do
+  def create_upload(_, params, _) do
     case Content.create_upload(params) do
       {:error, changeset} ->
         {:error,

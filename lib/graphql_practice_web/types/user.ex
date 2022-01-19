@@ -15,5 +15,4 @@ defmodule GraphqlPracticeWeb.Types.User do
     field :user, :user
     field :errors, list_of(:input_error)
   end
-
 end
