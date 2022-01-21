@@ -24,4 +24,22 @@ defmodule GraphqlPracticeWeb.Resolvers.Upload do
         {:ok, %{upload: upload}}
     end
   end
+
+  def update_upload(_, %{id: id} = params, _) do
+    id = String.to_integer(id)
+    params = Map.delete(params, :id)
+    with {:ok, upload} <- Content.get_upload(id),
+    {:ok, updated_upload} <- Content.update_upload(upload, params) do
+      {:ok, %{upload: updated_upload}}
+    else
+      {:error, changeset} ->
+        {:error,
+         message: "Could not update upload!",
+         details: Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)}
+      nil -> {:error, message: "upload not found"}
+
+
+
+    end
+  end
 end

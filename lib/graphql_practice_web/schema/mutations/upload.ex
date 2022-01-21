@@ -11,5 +11,15 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.Upload do
 
       resolve &Resolvers.Upload.create_upload/3
     end
+
+    @desc "Updates an upload"
+      field :update_upload, :upload_result do
+        arg :id, non_null(:id)
+        arg :title, :string
+        arg :description, :string
+
+        resolve &Resolvers.Upload.update_upload/3
+      end
+
   end
 end

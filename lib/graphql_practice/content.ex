@@ -16,6 +16,10 @@ defmodule GraphqlPractice.Content do
     Repo.get!(Upload, id)
   end
 
+  def get_upload(id) do
+    Repo.get(Upload, id)
+  end
+
   def get_upload_by_title(title) do
     Repo.get_by(Upload, title: title)
   end
