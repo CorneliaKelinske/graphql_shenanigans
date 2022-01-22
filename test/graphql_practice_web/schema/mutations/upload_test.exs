@@ -1,6 +1,7 @@
 defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
   use GraphqlPractice.DataCase, async: true
   import GraphqlPractice.AccountsFixtures
+  import GraphqlPractice.ContentFixtures
 
   alias GraphqlPracticeWeb.Schema
   alias GraphqlPractice.Content
@@ -76,12 +77,74 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
 
       assert [
                %{
-                 details: %{description: ["can't be blank"], title: ["can't be blank"]},
-                 locations: _,
+                 details: %{description: ["can't be blank"], title: ["can't be blank"]},                locations: _,
                  message: "Could not create upload!",
                  path: ["createUpload"]
                }
              ] = errors
+    end
+  end
+
+  @update_upload_doc """
+   mutation UpdateUpload($id: Id!, $title: String, $description: String){
+    updateUpload(id: $id, title: $title, description: $description){
+    errors{
+      details
+      key
+      message
+    }
+    upload{
+     id
+     title
+     description
+     user {
+       name
+       id
+     }
+    }
+  }
+  }
+  """
+
+  describe "@update_upload_doc" do
+    setup [:user, :upload]
+
+    test "Updates an upload when valid params are provided", %{upload: upload} do
+      update_title = "updated title"
+      update_description = "updated description"
+      id = upload.id
+
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@update_upload_doc, Schema,
+                 variables: %{
+                   "title" => update_title,
+                   "description" => update_description,
+                   "id" => id
+                 }
+               )
+
+      assert %{"updateUpload" => %{"errors" => nil, "upload" => upload}} = data
+
+      assert %{
+               "title" => ^update_title,
+               "description" => ^update_description
+             } = upload
+    end
+
+    test "Returns errors when ID is not found", %{upload: upload} do
+      update_title = "updated title"
+      update_description = "updated description"
+      non_existent_id = upload.id + 1
+
+      assert {:ok, %{errors: errors}} =
+               Absinthe.run(@update_upload_doc, Schema,
+                 variables: %{
+                   "title" => update_title,
+                   "description" => update_description,
+                   "id" => non_existent_id
+                 }
+               )
+               assert [%{message: "upload not found", path: ["updateUpload"]}] = errors
     end
   end
 end
