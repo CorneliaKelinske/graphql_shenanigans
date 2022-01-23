@@ -193,7 +193,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                }
              } = data
 
-      assert_raise Ecto.NoResultsError, fn -> Content.get_upload!(upload.id) end
+      assert_raise Ecto.NoResultsError, fn -> Content.get_upload!(id) end
     end
   end
 end

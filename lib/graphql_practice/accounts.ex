@@ -16,6 +16,10 @@ defmodule GraphqlPractice.Accounts do
     Repo.get!(User, id)
   end
 
+  def get_user(id) do
+    Repo.get(User, id)
+  end
+
   def get_user_by_name(name) do
     Repo.get_by(User, name: name)
   end
