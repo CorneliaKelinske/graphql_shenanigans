@@ -76,11 +76,10 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                )
 
       assert [
-               %{
-                 details: %{description: ["can't be blank"], title: ["can't be blank"]},                locations: _,
-                 message: "Could not create upload!",
-                 path: ["createUpload"]
-               }
+
+                %{message: "description: can't be blank", path: ["createUpload"]},
+                %{message: "title: can't be blank", path: ["createUpload"]}
+
              ] = errors
     end
   end
@@ -144,7 +143,8 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                    "id" => non_existent_id
                  }
                )
-               assert [%{message: "upload not found", path: ["updateUpload"]}] = errors
+
+      assert [%{message: "Upload not found!", path: ["updateUpload"]}] = errors
     end
   end
 end

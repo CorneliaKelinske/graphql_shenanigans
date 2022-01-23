@@ -16,31 +16,24 @@ defmodule GraphqlPracticeWeb.Resolvers.Upload do
 
   def create_upload(_, params, _) do
     case Content.create_upload(params) do
-      {:error, changeset} ->
-        {:error,
-         message: "Could not create upload!",
-         details: Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)}
-
-      {:ok, upload} ->
-        {:ok, %{upload: upload}}
+      {:error, changeset} ->        {:error, changeset}
+      {:ok, upload} ->        {:ok, %{upload: upload}}
     end
   end
 
   def update_upload(_, %{id: id} = params, _) do
-    id = String.to_integer(id)
     params = Map.delete(params, :id)
 
     with %Upload{} = upload <- Content.get_upload(id),
          {:ok, updated_upload} <- Content.update_upload(upload, params) do
       {:ok, %{upload: updated_upload}}
     else
-      {:error, changeset} ->
-        {:error,
-         message: "Could not update upload!",
-         details: Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)}
-
-      nil ->
-        {:error, message: "upload not found"}
+      {:error, changeset} -> {:error, changeset}
+      nil -> {:error, message: "Upload not found!"}
     end
   end
+
+  # def delete_upload(_, %{id: id} = params, _) do
+  #   id = String.to_integer()
+  # end
 end
