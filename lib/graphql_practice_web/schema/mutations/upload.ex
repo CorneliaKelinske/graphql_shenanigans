@@ -20,5 +20,12 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.Upload do
 
       resolve &Resolvers.Upload.update_upload/3
     end
+
+    @desc "Deletes an upload"
+    field :delete_upload, :upload_result do
+      arg :id, non_null(:id)
+
+      resolve &Resolvers.Upload.delete_upload/3
+    end
   end
 end

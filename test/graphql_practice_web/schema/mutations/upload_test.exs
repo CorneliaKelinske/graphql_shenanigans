@@ -76,10 +76,8 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                )
 
       assert [
-
-                %{message: "description: can't be blank", path: ["createUpload"]},
-                %{message: "title: can't be blank", path: ["createUpload"]}
-
+               %{message: "description: can't be blank", path: ["createUpload"]},
+               %{message: "title: can't be blank", path: ["createUpload"]}
              ] = errors
     end
   end
@@ -105,7 +103,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
   }
   """
 
-  describe "@update_upload_doc" do
+  describe "@update_upload" do
     setup [:user, :upload]
 
     test "Updates an upload when valid params are provided", %{upload: upload} do
@@ -145,6 +143,57 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                )
 
       assert [%{message: "Upload not found!", path: ["updateUpload"]}] = errors
+    end
+  end
+
+  @delete_upload_doc """
+   mutation DeleteUpload($id: Id!){
+    deleteUpload(id: $id){
+    errors{
+      details
+      key
+      message
+    }
+    upload{
+     id
+     title
+     description
+     user {
+       name
+       id
+     }
+    }
+  }
+  }
+  """
+
+  describe "@delete_upload" do
+    setup [:user, :upload]
+
+    test "Deletes an upload when valid id is provided", %{upload: upload} do
+      id = upload.id
+
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@delete_upload_doc, Schema,
+                 variables: %{
+                   "id" => id
+                 }
+               )
+
+      string_id = to_string(id)
+
+      assert %{
+               "deleteUpload" => %{
+                 "errors" => nil,
+                 "upload" => %{
+                   "description" => "some description",
+                   "id" => ^string_id,
+                   "title" => "some title"
+                 }
+               }
+             } = data
+
+      assert_raise Ecto.NoResultsError, fn -> Content.get_upload!(upload.id) end
     end
   end
 end
