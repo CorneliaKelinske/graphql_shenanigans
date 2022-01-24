@@ -37,7 +37,7 @@ defmodule GraphqlPractice.Accounts do
   end
 
   def delete_user(%User{} = user) do
-    Repo.delete(user) 
+    Repo.delete(user)
   end
 
   def change_user(%User{} = user, attrs \\ %{}) do

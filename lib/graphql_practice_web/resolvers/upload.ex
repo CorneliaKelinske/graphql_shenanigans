@@ -15,7 +15,7 @@ defmodule GraphqlPracticeWeb.Resolvers.Upload do
   end
 
   def create_upload(_, params, _) do
-      Content.create_upload(params)
+    Content.create_upload(params)
   end
 
   def update_upload(_, %{id: id} = params, _) do

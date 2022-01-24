@@ -15,9 +15,10 @@ defmodule GraphqlPractice.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: GraphqlPractice.PubSub},
       # Start the Endpoint (http/https)
-      GraphqlPracticeWeb.Endpoint
+      GraphqlPracticeWeb.Endpoint,
       # Start a worker by calling: GraphqlPractice.Worker.start_link(arg)
       # {GraphqlPractice.Worker, arg}
+      GraphqlPractice.Metric
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -162,7 +162,10 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
       string_id = to_string(id)
 
       assert %{"deleteUpload" => deleted_upload} = data
-      assert %{"description" => "some description", "id" => ^string_id, "title" => "some title"} = deleted_upload
+
+      assert %{"description" => "some description", "id" => ^string_id, "title" => "some title"} =
+               deleted_upload
+
       assert_raise Ecto.NoResultsError, fn -> Content.get_upload!(id) end
     end
   end
