@@ -8,19 +8,13 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
   @create_user_doc """
    mutation CreateUser($name: String!, $email: String!){
      createUser(name: $name, email: $email){
-     errors{
-       details
-       key
-       message
-     }
-     user{
       id
       email
       name
-      uploads {
+      uploads{
         title
       }
-     }
+
    }
   }
   """
@@ -35,7 +29,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
                  variables: %{"name" => create_name, "email" => create_email}
                )
 
-      assert %{"createUser" => %{"errors" => nil, "user" => user}} = data
+      assert %{"createUser" => user} = data
 
       assert %{
                "name" => ^create_name,
@@ -67,19 +61,13 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
   @update_user_doc """
    mutation UpdateUser($id: ID!, $name: String, $email: String){
      updateUser(id: $id, name: $name, email: $email){
-     errors{
-       details
-       key
-       message
-     }
-     user{
       id
       email
       name
       uploads {
         title
       }
-     }
+
    }
   }
   """
@@ -97,7 +85,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
                  variables: %{"name" => update_name, "email" => updated_email, "id" => id}
                )
 
-      assert %{"updateUser" => %{"errors" => nil, "user" => user}} = data
+      assert %{"updateUser" => user} = data
 
       assert %{"name" => ^update_name, "email" => ^updated_email} = user
     end
@@ -123,19 +111,12 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
   @delete_user_doc """
    mutation deleteUser($id: ID!){
      deleteUser(id: $id){
-     errors{
-       details
-       key
-       message
-     }
-     user{
       id
       email
       name
       uploads {
         title
       }
-     }
    }
   }
   """
@@ -151,12 +132,8 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
 
       string_id = to_string(id)
 
-      assert %{
-               "deleteUser" => %{
-                 "errors" => nil,
-                 "user" => %{"email" => "some email", "id" => ^string_id, "name" => "some name"}
-               }
-             } = data
+      assert %{"deleteUser" => deleted_user} = data
+      assert %{"email" => "some email", "id" => ^string_id, "name" => "some name"} = deleted_user
 
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(id) end
     end

@@ -15,10 +15,7 @@ defmodule GraphqlPracticeWeb.Resolvers.Upload do
   end
 
   def create_upload(_, params, _) do
-    case Content.create_upload(params) do
-      {:error, changeset} -> {:error, changeset}
-      {:ok, upload} -> {:ok, %{upload: upload}}
-    end
+      Content.create_upload(params)
   end
 
   def update_upload(_, %{id: id} = params, _) do
@@ -26,7 +23,7 @@ defmodule GraphqlPracticeWeb.Resolvers.Upload do
 
     with %Upload{} = upload <- Content.get_upload(id),
          {:ok, updated_upload} <- Content.update_upload(upload, params) do
-      {:ok, %{upload: updated_upload}}
+      {:ok, updated_upload}
     else
       {:error, changeset} -> {:error, changeset}
       nil -> {:error, message: "Upload not found!"}
@@ -36,7 +33,7 @@ defmodule GraphqlPracticeWeb.Resolvers.Upload do
   def delete_upload(_, %{id: id}, _) do
     with %Upload{} = upload <- Content.get_upload(id),
          {:ok, deleted_upload} <- Content.delete_upload(upload) do
-      {:ok, %{upload: deleted_upload}}
+      {:ok, deleted_upload}
     else
       {:error, changeset} -> {:error, changeset}
       nil -> {:error, message: "Upload not found!"}

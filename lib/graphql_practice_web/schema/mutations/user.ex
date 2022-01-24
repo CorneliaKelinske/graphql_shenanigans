@@ -4,7 +4,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.User do
 
   object :user_mutations do
     @desc "Creates a user"
-    field :create_user, :user_result do
+    field :create_user, :user do
       arg :name, non_null(:string)
       arg :email, non_null(:string)
 
@@ -12,7 +12,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.User do
     end
 
     @desc "Updates a user"
-    field :update_user, :user_result do
+    field :update_user, :user do
       arg :id, non_null(:id)
       arg :name, :string
       arg :email, :string
@@ -21,7 +21,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.User do
     end
 
     @desc "Deletes a user"
-    field :delete_user, :user_result do
+    field :delete_user, :user do
       arg :id, non_null(:id)
 
       resolve &Resolvers.User.delete_user/3

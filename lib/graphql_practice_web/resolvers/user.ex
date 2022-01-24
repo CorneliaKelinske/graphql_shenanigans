@@ -15,13 +15,7 @@ defmodule GraphqlPracticeWeb.Resolvers.User do
   end
 
   def create_user(_, params, _) do
-    case Accounts.create_user(params) do
-      {:error, changeset} ->
-        {:error, changeset}
-
-      {:ok, user} ->
-        {:ok, %{user: user}}
-    end
+    Accounts.create_user(params)
   end
 
   def update_user(_, %{id: id} = params, _) do
@@ -29,7 +23,7 @@ defmodule GraphqlPracticeWeb.Resolvers.User do
 
     with %User{} = user <- Accounts.get_user(id),
          {:ok, updated_user} <- Accounts.update_user(user, params) do
-      {:ok, %{user: updated_user}}
+      {:ok, updated_user}
     else
       {:error, changeset} -> {:error, changeset}
       nil -> {:error, message: "User not found!"}
@@ -39,7 +33,7 @@ defmodule GraphqlPracticeWeb.Resolvers.User do
   def delete_user(_, %{id: id}, _) do
     with %User{} = user <- Accounts.get_user(id),
          {:ok, deleted_user} <- Accounts.delete_user(user) do
-      {:ok, %{user: deleted_user}}
+      {:ok, deleted_user}
     else
       {:error, changeset} -> {:error, changeset}
       nil -> {:error, message: "User not found!"}

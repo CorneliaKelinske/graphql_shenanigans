@@ -10,12 +10,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
   @create_upload_doc """
    mutation CreateUpload($title: String!, $description: String!, $user_id: ID!){
      createUpload(title: $title, description: $description, user_id: $user_id){
-     errors{
-       details
-       key
-       message
-     }
-     upload{
       id
       title
       description
@@ -23,7 +17,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
         name
         id
       }
-     }
    }
   }
   """
@@ -45,7 +38,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                  }
                )
 
-      assert %{"createUpload" => %{"errors" => nil, "upload" => upload}} = data
+      assert %{"createUpload" => upload} = data
       string_user_id = to_string(user_id)
 
       assert %{
@@ -85,12 +78,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
   @update_upload_doc """
    mutation UpdateUpload($id: Id!, $title: String, $description: String){
     updateUpload(id: $id, title: $title, description: $description){
-    errors{
-      details
-      key
-      message
-    }
-    upload{
      id
      title
      description
@@ -98,7 +85,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
        name
        id
      }
-    }
   }
   }
   """
@@ -120,7 +106,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                  }
                )
 
-      assert %{"updateUpload" => %{"errors" => nil, "upload" => upload}} = data
+      assert %{"updateUpload" => upload} = data
 
       assert %{
                "title" => ^update_title,
@@ -149,12 +135,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
   @delete_upload_doc """
    mutation DeleteUpload($id: Id!){
     deleteUpload(id: $id){
-    errors{
-      details
-      key
-      message
-    }
-    upload{
      id
      title
      description
@@ -162,7 +142,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
        name
        id
      }
-    }
   }
   }
   """
@@ -182,17 +161,8 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
 
       string_id = to_string(id)
 
-      assert %{
-               "deleteUpload" => %{
-                 "errors" => nil,
-                 "upload" => %{
-                   "description" => "some description",
-                   "id" => ^string_id,
-                   "title" => "some title"
-                 }
-               }
-             } = data
-
+      assert %{"deleteUpload" => deleted_upload} = data
+      assert %{"description" => "some description", "id" => ^string_id, "title" => "some title"} = deleted_upload
       assert_raise Ecto.NoResultsError, fn -> Content.get_upload!(id) end
     end
   end
