@@ -16,6 +16,10 @@ defmodule GraphqlPractice.Accounts do
     Repo.get!(User, id)
   end
 
+  def get_user(id) do
+    Repo.get(User, id)
+  end
+
   def get_user_by_name(name) do
     Repo.get_by(User, name: name)
   end
@@ -33,7 +37,7 @@ defmodule GraphqlPractice.Accounts do
   end
 
   def delete_user(%User{} = user) do
-    Repo.delete(user)
+    Repo.delete(user) 
   end
 
   def change_user(%User{} = user, attrs \\ %{}) do

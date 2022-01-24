@@ -1,5 +1,6 @@
 defmodule GraphqlPracticeWeb.Resolvers.Upload do
   alias GraphqlPractice.Content
+  alias GraphqlPractice.Content.Upload
 
   def uploads(_, _, _) do
     {:ok, Content.list_uploads()}
@@ -14,14 +15,28 @@ defmodule GraphqlPracticeWeb.Resolvers.Upload do
   end
 
   def create_upload(_, params, _) do
-    case Content.create_upload(params) do
-      {:error, changeset} ->
-        {:error,
-         message: "Could not create upload!",
-         details: Ecto.Changeset.traverse_errors(changeset, fn {msg, _opts} -> msg end)}
+      Content.create_upload(params)
+  end
 
-      {:ok, upload} ->
-        {:ok, %{upload: upload}}
+  def update_upload(_, %{id: id} = params, _) do
+    params = Map.delete(params, :id)
+
+    with %Upload{} = upload <- Content.get_upload(id),
+         {:ok, updated_upload} <- Content.update_upload(upload, params) do
+      {:ok, updated_upload}
+    else
+      {:error, changeset} -> {:error, changeset}
+      nil -> {:error, message: "Upload not found!"}
+    end
+  end
+
+  def delete_upload(_, %{id: id}, _) do
+    with %Upload{} = upload <- Content.get_upload(id),
+         {:ok, deleted_upload} <- Content.delete_upload(upload) do
+      {:ok, deleted_upload}
+    else
+      {:error, changeset} -> {:error, changeset}
+      nil -> {:error, message: "Upload not found!"}
     end
   end
 end

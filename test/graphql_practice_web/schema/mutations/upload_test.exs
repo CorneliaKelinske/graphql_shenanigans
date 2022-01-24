@@ -1,6 +1,7 @@
 defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
   use GraphqlPractice.DataCase, async: true
   import GraphqlPractice.AccountsFixtures
+  import GraphqlPractice.ContentFixtures
 
   alias GraphqlPracticeWeb.Schema
   alias GraphqlPractice.Content
@@ -9,12 +10,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
   @create_upload_doc """
    mutation CreateUpload($title: String!, $description: String!, $user_id: ID!){
      createUpload(title: $title, description: $description, user_id: $user_id){
-     errors{
-       details
-       key
-       message
-     }
-     upload{
       id
       title
       description
@@ -22,7 +17,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
         name
         id
       }
-     }
    }
   }
   """
@@ -44,7 +38,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                  }
                )
 
-      assert %{"createUpload" => %{"errors" => nil, "upload" => upload}} = data
+      assert %{"createUpload" => upload} = data
       string_user_id = to_string(user_id)
 
       assert %{
@@ -75,13 +69,101 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UploadTest do
                )
 
       assert [
-               %{
-                 details: %{description: ["can't be blank"], title: ["can't be blank"]},
-                 locations: _,
-                 message: "Could not create upload!",
-                 path: ["createUpload"]
-               }
+               %{message: "description: can't be blank", path: ["createUpload"]},
+               %{message: "title: can't be blank", path: ["createUpload"]}
              ] = errors
+    end
+  end
+
+  @update_upload_doc """
+   mutation UpdateUpload($id: Id!, $title: String, $description: String){
+    updateUpload(id: $id, title: $title, description: $description){
+     id
+     title
+     description
+     user {
+       name
+       id
+     }
+  }
+  }
+  """
+
+  describe "@update_upload" do
+    setup [:user, :upload]
+
+    test "Updates an upload when valid params are provided", %{upload: upload} do
+      update_title = "updated title"
+      update_description = "updated description"
+      id = upload.id
+
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@update_upload_doc, Schema,
+                 variables: %{
+                   "title" => update_title,
+                   "description" => update_description,
+                   "id" => id
+                 }
+               )
+
+      assert %{"updateUpload" => upload} = data
+
+      assert %{
+               "title" => ^update_title,
+               "description" => ^update_description
+             } = upload
+    end
+
+    test "Returns errors when ID is not found", %{upload: upload} do
+      update_title = "updated title"
+      update_description = "updated description"
+      non_existent_id = upload.id + 1
+
+      assert {:ok, %{errors: errors}} =
+               Absinthe.run(@update_upload_doc, Schema,
+                 variables: %{
+                   "title" => update_title,
+                   "description" => update_description,
+                   "id" => non_existent_id
+                 }
+               )
+
+      assert [%{message: "Upload not found!", path: ["updateUpload"]}] = errors
+    end
+  end
+
+  @delete_upload_doc """
+   mutation DeleteUpload($id: Id!){
+    deleteUpload(id: $id){
+     id
+     title
+     description
+     user {
+       name
+       id
+     }
+  }
+  }
+  """
+
+  describe "@delete_upload" do
+    setup [:user, :upload]
+
+    test "Deletes an upload when valid id is provided", %{upload: upload} do
+      id = upload.id
+
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@delete_upload_doc, Schema,
+                 variables: %{
+                   "id" => id
+                 }
+               )
+
+      string_id = to_string(id)
+
+      assert %{"deleteUpload" => deleted_upload} = data
+      assert %{"description" => "some description", "id" => ^string_id, "title" => "some title"} = deleted_upload
+      assert_raise Ecto.NoResultsError, fn -> Content.get_upload!(id) end
     end
   end
 end
