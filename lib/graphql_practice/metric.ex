@@ -6,17 +6,13 @@ defmodule GraphqlPractice.Metric do
   end
 
   def get_count(request) do
-    Agent.get(__MODULE__, fn state ->
-      Map.get(state, request)
-    end)
+    Agent.get(__MODULE__, & Map.get(&1, request, 0))
   end
 
   def increment_count(request) do
     Agent.update(__MODULE__, fn state ->
-      case Map.get(state, request) do
-        nil -> Map.put(state, request, 1)
-        count -> Map.put(state, request, count + 1)
-      end
+      Map.update(state, request, 1, & &1 + 1)
     end)
+
   end
 end
