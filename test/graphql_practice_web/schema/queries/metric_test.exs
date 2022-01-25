@@ -1,6 +1,11 @@
 defmodule GraphqlPracticeWeb.Schema.Queries.MetricTest do
   use GraphqlPractice.DataCase, async: true
   alias GraphqlPracticeWeb.Schema
+  alias GraphqlPractice.Metric
+
+  use ExUnit.Case, async: true
+
+
 
   @users_doc """
   query getUsers{
@@ -27,12 +32,10 @@ defmodule GraphqlPracticeWeb.Schema.Queries.MetricTest do
   """
 
   describe "@count_request" do
-    setup do
-      Application.stop(:graphql_practice)
-      :ok = Application.start(:graphql_practice)
-    end
+
 
     test "returns a count of 0 for a given request when the request has not yet been made" do
+      #start_supervised(Metric)
       assert {:ok, %{data: data}} =
                Absinthe.run(@count_request_doc, Schema, variables: %{"request" => "users"})
 
