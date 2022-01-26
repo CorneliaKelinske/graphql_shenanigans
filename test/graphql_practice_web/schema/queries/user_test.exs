@@ -3,7 +3,7 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
   alias GraphqlPractice.Accounts
   alias GraphqlPracticeWeb.Schema
 
-  @user1_params %{name: "Ursula", email: "ursuala@example.com"}
+  @user1_params %{name: "Ursula", email: "ursula@example.com"}
   @user2_params %{name: "Birgitta", email: "birgitta@example.com"}
   @user3_params %{name: "Harry", email: "harry@example.com"}
 
@@ -31,7 +31,7 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
       assert {:ok, %{data: data}} =
                Absinthe.run(@user_doc, Schema, variables: %{"id" => user1.id})
 
-      assert %{"user" => %{"email" => "ursuala@example.com", "name" => "Ursula"}} = data
+      assert %{"user" => %{"email" => "ursula@example.com", "name" => "Ursula"}} = data
     end
   end
 
@@ -58,7 +58,7 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
 
       id = to_string(user1.id)
 
-      assert %{"userByName" => %{"email" => "ursuala@example.com", "id" => ^id, "uploads" => []}} =
+      assert %{"userByName" => %{"email" => "ursula@example.com", "id" => ^id, "uploads" => []}} =
                data
     end
   end
@@ -79,6 +79,11 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
   """
 
   describe "@users" do
+    setup do
+      start_supervised!({GraphqlPractice.Metric, self()})
+      :ok
+    end
+
     test "Returns a list of all users" do
       [%{id: user1_id}, %{id: user2_id}, %{id: user3_id}] =
         for params <- @all_user_params do
@@ -96,7 +101,7 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UserTest do
 
       assert [
                %{
-                 "email" => "ursuala@example.com",
+                 "email" => "ursula@example.com",
                  "id" => ^user1_id,
                  "name" => "Ursula",
                  "uploads" => []

@@ -5,8 +5,6 @@ defmodule GraphqlPracticeWeb.Schema.Queries.MetricTest do
 
   use ExUnit.Case, async: true
 
-
-
   @users_doc """
   query getUsers{
    users{
@@ -32,10 +30,12 @@ defmodule GraphqlPracticeWeb.Schema.Queries.MetricTest do
   """
 
   describe "@count_request" do
-
+    setup do
+      start_supervised!({GraphqlPractice.Metric, self()})
+      :ok
+    end
 
     test "returns a count of 0 for a given request when the request has not yet been made" do
-      #start_supervised(Metric)
       assert {:ok, %{data: data}} =
                Absinthe.run(@count_request_doc, Schema, variables: %{"request" => "users"})
 
@@ -45,10 +45,11 @@ defmodule GraphqlPracticeWeb.Schema.Queries.MetricTest do
     test "returns the correct count for a given request when the request has been made" do
       assert {:ok, %{data: data}} = Absinthe.run(@users_doc, Schema)
       Absinthe.run(@users_doc, Schema)
-      assert {:ok, %{data: data}} =
-        Absinthe.run(@count_request_doc, Schema, variables: %{"request" => "users"})
-        assert %{"countRequest" => %{"count" => 2, "request" => "users"}} = data
 
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@count_request_doc, Schema, variables: %{"request" => "users"})
+
+      assert %{"countRequest" => %{"count" => 2, "request" => "users"}} = data
     end
   end
 end
