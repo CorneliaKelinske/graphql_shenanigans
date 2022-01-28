@@ -19,123 +19,129 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
   }
   """
 
-  # describe "@create_user" do
-  #   test "Creates a new user" do
-  #     create_name = "Rand"
-  #     create_email = "rand@darkside.com"
+  describe "@create_user" do
 
-  #     assert {:ok, %{data: data}} =
-  #              Absinthe.run(@create_user_doc, Schema,
-  #                variables: %{"name" => create_name, "email" => create_email}
-  #              )
+    setup do
+      start_supervised!({GraphqlPractice.Metric, self()})
+      :ok
+    end
 
-  #     assert %{"createUser" => user} = data
+    test "Creates a new user" do
+      create_name = "Rand"
+      create_email = "rand@darkside.com"
 
-  #     assert %{
-  #              "name" => ^create_name,
-  #              "email" => ^create_email
-  #            } = user
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@create_user_doc, Schema,
+                 variables: %{"name" => create_name, "email" => create_email}
+               )
 
-  #     string_id = Map.get(user, "id")
-  #     id = String.to_integer(string_id)
+      assert %{"createUser" => user} = data
 
-  #     assert %User{name: ^create_name, email: ^create_email, id: ^id} = Accounts.get_user!(id)
-  #   end
+      assert %{
+               "name" => ^create_name,
+               "email" => ^create_email
+             } = user
 
-  #   test "Returns errors when invalid input arguments are provided" do
-  #     create_name = ""
-  #     create_email = ""
+      string_id = Map.get(user, "id")
+      id = String.to_integer(string_id)
 
-  #     assert {:ok, %{errors: errors}} =
-  #              Absinthe.run(@create_user_doc, Schema,
-  #                variables: %{"name" => create_name, "email" => create_email}
-  #              )
+      assert %User{name: ^create_name, email: ^create_email, id: ^id} = Accounts.get_user!(id)
+    end
 
-  #     assert [
-  #              %{message: "email: can't be blank", path: ["createUser"]},
-  #              %{message: "name: can't be blank", path: ["createUser"]}
-  #            ] = errors
-  #   end
-  # end
+    test "Returns errors when invalid input arguments are provided" do
+      create_name = ""
+      create_email = ""
 
-  # @update_user_doc """
-  #  mutation UpdateUser($id: ID!, $name: String, $email: String){
-  #    updateUser(id: $id, name: $name, email: $email){
-  #     id
-  #     email
-  #     name
-  #     uploads {
-  #       title
-  #     }
+      assert {:ok, %{errors: errors}} =
+               Absinthe.run(@create_user_doc, Schema,
+                 variables: %{"name" => create_name, "email" => create_email}
+               )
 
-  #  }
-  # }
-  # """
+      assert [
+               %{message: "email: can't be blank", path: ["createUser"]},
+               %{message: "name: can't be blank", path: ["createUser"]}
+             ] = errors
+    end
+  end
 
-  # describe "@update_user" do
-  #   setup [:user]
+  @update_user_doc """
+   mutation UpdateUser($id: ID!, $name: String, $email: String){
+     updateUser(id: $id, name: $name, email: $email){
+      id
+      email
+      name
+      uploads {
+        title
+      }
 
-  #   test "Updates a user when valid params are provided", %{user: user} do
-  #     update_name = "updated name"
-  #     updated_email = "updated_email"
-  #     id = user.id
+   }
+  }
+  """
 
-  #     assert {:ok, %{data: data}} =
-  #              Absinthe.run(@update_user_doc, Schema,
-  #                variables: %{"name" => update_name, "email" => updated_email, "id" => id}
-  #              )
+  describe "@update_user" do
+    setup [:user]
 
-  #     assert %{"updateUser" => user} = data
+    test "Updates a user when valid params are provided", %{user: user} do
+      update_name = "updated name"
+      updated_email = "updated_email"
+      id = user.id
 
-  #     assert %{"name" => ^update_name, "email" => ^updated_email} = user
-  #   end
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@update_user_doc, Schema,
+                 variables: %{"name" => update_name, "email" => updated_email, "id" => id}
+               )
 
-  #   test "Returns errors when ID is not found", %{user: user} do
-  #     update_name = "updated name"
-  #     updated_email = "updated_email"
-  #     non_existent_id = user.id + 1
+      assert %{"updateUser" => user} = data
 
-  #     assert {:ok, %{errors: errors}} =
-  #              Absinthe.run(@update_user_doc, Schema,
-  #                variables: %{
-  #                  "name" => update_name,
-  #                  "email" => updated_email,
-  #                  "id" => non_existent_id
-  #                }
-  #              )
+      assert %{"name" => ^update_name, "email" => ^updated_email} = user
+    end
 
-  #     assert [%{message: "User not found!", path: ["updateUser"]}] = errors
-  #   end
-  # end
+    test "Returns errors when ID is not found", %{user: user} do
+      update_name = "updated name"
+      updated_email = "updated_email"
+      non_existent_id = user.id + 1
 
-  # @delete_user_doc """
-  #  mutation deleteUser($id: ID!){
-  #    deleteUser(id: $id){
-  #     id
-  #     email
-  #     name
-  #     uploads {
-  #       title
-  #     }
-  #  }
-  # }
-  # """
+      assert {:ok, %{errors: errors}} =
+               Absinthe.run(@update_user_doc, Schema,
+                 variables: %{
+                   "name" => update_name,
+                   "email" => updated_email,
+                   "id" => non_existent_id
+                 }
+               )
 
-  # describe "@delete_user" do
-  #   setup [:user]
+      assert [%{message: "User not found!", path: ["updateUser"]}] = errors
+    end
+  end
 
-  #   test "Deletes a user when valid id is provided", %{user: user} do
-  #     id = user.id
+  @delete_user_doc """
+   mutation deleteUser($id: ID!){
+     deleteUser(id: $id){
+      id
+      email
+      name
+      uploads {
+        title
+      }
+   }
+  }
+  """
 
-  #     assert {:ok, %{data: data}} =
-  #              Absinthe.run(@delete_user_doc, Schema, variables: %{"id" => id})
+  describe "@delete_user" do
+    setup [:user]
 
-  #     string_id = to_string(id)
+    test "Deletes a user when valid id is provided", %{user: %{id: user_id, name: name, email: email} = user} do
+      id = user.id
 
-  #     assert %{"deleteUser" => deleted_user} = data
-  #     assert %{"email" => "some email", "id" => ^string_id, "name" => "some name"} = deleted_user
+      assert {:ok, %{data: data}} =
+               Absinthe.run(@delete_user_doc, Schema, variables: %{"id" => id})
 
-  #     assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(id) end
-  #   end
-  # end
+      string_id = to_string(id)
+
+      assert %{"deleteUser" => deleted_user} = data
+      assert %{"email" => ^email, "id" => ^string_id, "name" => ^name} = deleted_user
+
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(id) end
+    end
+  end
 end
