@@ -4,7 +4,7 @@ defmodule GraphqlPracticeWeb.Resolvers.User do
   alias GraphqlPractice.Metric
 
   def users(_, _, _) do
-    Metric.increment_count("users")
+    Metric.increment_count("users", self())
     {:ok, Accounts.list_users()}
   end
 
@@ -17,7 +17,7 @@ defmodule GraphqlPracticeWeb.Resolvers.User do
   end
 
   def create_user(_, params, _) do
-    Metric.increment_count("createUser")
+    Metric.increment_count("createUser", self())
     Accounts.create_user(params)
   end
 

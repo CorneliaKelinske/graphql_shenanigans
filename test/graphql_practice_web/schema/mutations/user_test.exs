@@ -20,6 +20,12 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
   """
 
   describe "@create_user" do
+
+    setup do
+      start_supervised!({GraphqlPractice.Metric, self()})
+      :ok
+    end
+
     test "Creates a new user" do
       create_name = "Rand"
       create_email = "rand@darkside.com"
@@ -124,7 +130,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
   describe "@delete_user" do
     setup [:user]
 
-    test "Deletes a user when valid id is provided", %{user: user} do
+    test "Deletes a user when valid id is provided", %{user: %{id: user_id, name: name, email: email} = user} do
       id = user.id
 
       assert {:ok, %{data: data}} =
@@ -133,7 +139,7 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
       string_id = to_string(id)
 
       assert %{"deleteUser" => deleted_user} = data
-      assert %{"email" => "some email", "id" => ^string_id, "name" => "some name"} = deleted_user
+      assert %{"email" => ^email, "id" => ^string_id, "name" => ^name} = deleted_user
 
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(id) end
     end

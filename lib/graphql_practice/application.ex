@@ -7,19 +7,19 @@ defmodule GraphqlPractice.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      # Start the Ecto repository
-      GraphqlPractice.Repo,
-      # Start the Telemetry supervisor
-      GraphqlPracticeWeb.Telemetry,
-      # Start the PubSub system
-      {Phoenix.PubSub, name: GraphqlPractice.PubSub},
-      # Start the Endpoint (http/https)
-      GraphqlPracticeWeb.Endpoint,
-      # Start a worker by calling: GraphqlPractice.Worker.start_link(arg)
-      # {GraphqlPractice.Worker, arg}
-      GraphqlPractice.Metric
-    ]
+    children =
+      [
+        # Start the Ecto repository
+        GraphqlPractice.Repo,
+        # Start the Telemetry supervisor
+        GraphqlPracticeWeb.Telemetry,
+        # Start the PubSub system
+        {Phoenix.PubSub, name: GraphqlPractice.PubSub},
+        # Start the Endpoint (http/https)
+        GraphqlPracticeWeb.Endpoint
+        # Start a worker by calling: GraphqlPractice.Worker.start_link(arg)
+        # {GraphqlPractice.Worker, arg}
+      ] ++ metric()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
@@ -33,5 +33,11 @@ defmodule GraphqlPractice.Application do
   def config_change(changed, _new, removed) do
     GraphqlPracticeWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  if Mix.env() !== :test do
+    def metric, do: [{GraphqlPractice.Metric, self()}]
+  else
+    def metric, do: []
   end
 end

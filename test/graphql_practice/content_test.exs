@@ -1,5 +1,5 @@
 defmodule GraphqlPractice.ContentTest do
-  use GraphqlPractice.DataCase
+  use GraphqlPractice.DataCase, async: true
   import GraphqlPractice.ContentFixtures
   import GraphqlPractice.AccountsFixtures
   alias GraphqlPractice.Content

@@ -8,17 +8,21 @@ defmodule GraphqlPractice.AccountsFixtures do
   Generate a user.
   """
   def user_fixture(attrs \\ %{}) do
+    email = Faker.Internet.email
+    name = Faker.Person.En.first_name()
     {:ok, user} =
       attrs
-      |> Enum.into(%{email: "some email", name: "some name"})
+      |> Enum.into(%{email: email, name: name})
       |> GraphqlPractice.Accounts.create_user()
 
     user
   end
 
   def user(_) do
+    email = Faker.Internet.email
+    name = Faker.Person.En.first_name()
     {:ok, user} =
-      %{email: "some email", name: "some name"}
+      %{email: email, name: name}
       |> GraphqlPractice.Accounts.create_user()
 
     %{user: Map.put(user, :uploads, [])}

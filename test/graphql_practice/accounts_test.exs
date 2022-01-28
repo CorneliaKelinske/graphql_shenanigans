@@ -1,5 +1,5 @@
 defmodule GraphqlPractice.AccountsTest do
-  use GraphqlPractice.DataCase
+  use GraphqlPractice.DataCase, async: true
 
   alias GraphqlPractice.Accounts
 
