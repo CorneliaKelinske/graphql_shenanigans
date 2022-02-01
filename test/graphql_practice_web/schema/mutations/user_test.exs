@@ -20,7 +20,6 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
   """
 
   describe "@create_user" do
-
     setup do
       start_supervised!({GraphqlPractice.Metric, self()})
       :ok
@@ -130,7 +129,9 @@ defmodule GraphqlPracticeWeb.Schema.Mutations.UserTest do
   describe "@delete_user" do
     setup [:user]
 
-    test "Deletes a user when valid id is provided", %{user: %{id: user_id, name: name, email: email} = user} do
+    test "Deletes a user when valid id is provided", %{
+      user: %{id: user_id, name: name, email: email} = user
+    } do
       id = user.id
 
       assert {:ok, %{data: data}} =

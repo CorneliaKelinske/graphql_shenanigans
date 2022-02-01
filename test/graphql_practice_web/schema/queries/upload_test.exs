@@ -72,7 +72,9 @@ defmodule GraphqlPracticeWeb.Schema.Queries.UploadTest do
   describe "@upload_by_title" do
     setup [:user]
 
-    test "Can get the upload by its title", %{user: %{id: user_id, name: name, email: email} = user} do
+    test "Can get the upload by its title", %{
+      user: %{id: user_id, name: name, email: email} = user
+    } do
       upload1_params = Map.put(@upload1_params, :user_id, user.id)
       assert {:ok, upload1} = Content.create_upload(upload1_params)
 

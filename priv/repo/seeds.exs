@@ -3,7 +3,6 @@
 #     mix run priv/repo/seeds.exs
 alias GraphqlPractice.{Content, Accounts, Repo}
 
-
 if Mix.env() === :dev do
   IO.puts("=== SEEDING DATABASE ===")
   Accounts.create_user(%{name: "Ursula", email: "ursuala@example.com"})

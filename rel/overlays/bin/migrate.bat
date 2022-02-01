@@ -1,0 +1,1 @@
+call "%~dp0\graphql_practice" eval GraphqlPractice.Release.migrate
