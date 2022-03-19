@@ -1,4 +1,4 @@
-defmodule GraphqlPractice.Repo.Migrations.CreateUploads do
+defmodule GraphqlShenanigans.Repo.Migrations.CreateUploads do
   use Ecto.Migration
 
   def change do

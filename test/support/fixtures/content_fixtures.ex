@@ -1,7 +1,7 @@
-defmodule GraphqlPractice.ContentFixtures do
+defmodule GraphqlShenanigans.ContentFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `GraphqlPractice.Content` context.
+  entities via the `GraphqlShenanigans.Content` context.
   """
 
   @doc """
@@ -15,7 +15,7 @@ defmodule GraphqlPractice.ContentFixtures do
         title: "some title",
         user_id: 1
       })
-      |> GraphqlPractice.Content.create_upload()
+      |> GraphqlShenanigans.Content.create_upload()
 
     upload
   end
@@ -27,7 +27,7 @@ defmodule GraphqlPractice.ContentFixtures do
         title: "some title",
         user_id: user.id
       }
-      |> GraphqlPractice.Content.create_upload()
+      |> GraphqlShenanigans.Content.create_upload()
 
     %{upload: upload}
   end

@@ -1,7 +1,7 @@
 # Script for populating the database. You can run it as:
 #
 #     mix run priv/repo/seeds.exs
-alias GraphqlPractice.{Content, Accounts, Repo}
+alias GraphqlShenanigans.{Content, Accounts, Repo}
 
 
 if Mix.env() === :dev do

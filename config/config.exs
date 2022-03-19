@@ -7,14 +7,14 @@
 # General application configuration
 import Config
 
-config :graphql_practice,
-  ecto_repos: [GraphqlPractice.Repo]
+config :graphql_shenanigans,
+  ecto_repos: [GraphqlShenanigans.Repo]
 
 # Configures the endpoint
-config :graphql_practice, GraphqlPracticeWeb.Endpoint,
+config :graphql_shenanigans, GraphqlShenanigansWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: GraphqlPracticeWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: GraphqlPractice.PubSub,
+  render_errors: [view: GraphqlShenanigansWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: GraphqlShenanigans.PubSub,
   live_view: [signing_salt: "hLuxCRHT"]
 
 # Configures the mailer
@@ -24,7 +24,7 @@ config :graphql_practice, GraphqlPracticeWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :graphql_practice, GraphqlPractice.Mailer, adapter: Swoosh.Adapters.Local
+config :graphql_shenanigans, GraphqlShenanigans.Mailer, adapter: Swoosh.Adapters.Local
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false

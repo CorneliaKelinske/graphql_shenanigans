@@ -1,7 +1,7 @@
-defmodule GraphqlPractice.AccountsFixtures do
+defmodule GraphqlShenanigans.AccountsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `GraphqlPractice.Accounts` context.
+  entities via the `GraphqlShenanigans.Accounts` context.
   """
 
   @doc """
@@ -13,7 +13,7 @@ defmodule GraphqlPractice.AccountsFixtures do
     {:ok, user} =
       attrs
       |> Enum.into(%{email: email, name: name})
-      |> GraphqlPractice.Accounts.create_user()
+      |> GraphqlShenanigans.Accounts.create_user()
 
     user
   end
@@ -23,7 +23,7 @@ defmodule GraphqlPractice.AccountsFixtures do
     name = Faker.Person.En.first_name()
     {:ok, user} =
       %{email: email, name: name}
-      |> GraphqlPractice.Accounts.create_user()
+      |> GraphqlShenanigans.Accounts.create_user()
 
     %{user: Map.put(user, :uploads, [])}
   end

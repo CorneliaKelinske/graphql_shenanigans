@@ -1,4 +1,4 @@
-defmodule GraphqlPractice.DataCase do
+defmodule GraphqlShenanigans.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -10,7 +10,7 @@ defmodule GraphqlPractice.DataCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use GraphqlPractice.DataCase, async: true`, although
+  by setting `use GraphqlShenanigans.DataCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -18,17 +18,17 @@ defmodule GraphqlPractice.DataCase do
 
   using do
     quote do
-      alias GraphqlPractice.Repo
+      alias GraphqlShenanigans.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import GraphqlPractice.DataCase
+      import GraphqlShenanigans.DataCase
     end
   end
 
   setup tags do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(GraphqlPractice.Repo, shared: not tags[:async])
+    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(GraphqlShenanigans.Repo, shared: not tags[:async])
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
     :ok
   end
